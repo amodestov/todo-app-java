@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">todo-app-java</string>
+    <string name="buttonAddNote_description">Click here to add a new note</string>
+    <string name="write_your_note_hint">Write your note</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
+    <string name="save">SAVE</string>
 </resources>
