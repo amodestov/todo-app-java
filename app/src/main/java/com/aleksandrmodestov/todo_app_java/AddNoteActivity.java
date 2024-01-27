@@ -3,8 +3,6 @@ package com.aleksandrmodestov.todo_app_java;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +10,8 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import models.Note;
 
@@ -23,19 +23,26 @@ public class AddNoteActivity extends AppCompatActivity {
     private RadioButton radioButtonHigh;
     private Button buttonSave;
 
-    private NotesDao notesDao;
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private AddNoteViewModel addNoteViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
         initViews();
-        notesDao = NotesDatabase.getInstance(getApplication()).notesDao();
+        addNoteViewModel = new ViewModelProvider(this).get(AddNoteViewModel.class);
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveNote();
+            }
+        });
+        addNoteViewModel.getShouldCloseScreen().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean shouldClose) {
+                if (shouldClose) {
+                    finish();
+                }
             }
         });
     }
@@ -53,25 +60,13 @@ public class AddNoteActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(AddNoteActivity.this, "Note text is empty!", Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    String text = editTextNote.getText().toString().trim();
-                    int priority = getPriority();
-                    Note note = new Note(text, priority);
-                    notesDao.add(note);
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    });
-                }
-            });
-            thread.start();
+            String text = editTextNote.getText().toString().trim();
+            int priority = getPriority();
+            Note note = new Note(text, priority);
+            addNoteViewModel.saveNote(note);
         }
-
     }
+
 
     private int getPriority() {
         int priority;

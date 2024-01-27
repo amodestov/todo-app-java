@@ -2,19 +2,17 @@ package com.aleksandrmodestov.todo_app_java;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.time.chrono.ThaiBuddhistEra;
 import java.util.List;
 
 import models.Note;
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
-        mainViewModel = new MainViewModel(getApplication());
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         buttonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                             int direction) {
                         int position = viewHolder.getAdapterPosition();
                         Note note = notesAdapter.getNotes().get(position);
-                        mainViewModel.remove(note);
+                        mainViewModel.removeNote(note);
                     }
                 });
         itemTouchHelper.attachToRecyclerView(recyclerViewNotes);
@@ -79,5 +77,11 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         recyclerViewNotes = findViewById(R.id.recyclerViewNotes);
         buttonAddNote = findViewById(R.id.buttonAddNote);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mainViewModel.refreshList();
     }
 }
