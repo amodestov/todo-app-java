@@ -78,10 +78,4 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewNotes = findViewById(R.id.recyclerViewNotes);
         buttonAddNote = findViewById(R.id.buttonAddNote);
     }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        mainViewModel.refreshList();
-    }
 }

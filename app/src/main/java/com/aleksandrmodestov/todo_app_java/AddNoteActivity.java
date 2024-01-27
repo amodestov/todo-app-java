@@ -20,7 +20,6 @@ public class AddNoteActivity extends AppCompatActivity {
     private EditText editTextNote;
     private RadioButton radioButtonLow;
     private RadioButton radioButtonMedium;
-    private RadioButton radioButtonHigh;
     private Button buttonSave;
 
     private AddNoteViewModel addNoteViewModel;
@@ -51,7 +50,6 @@ public class AddNoteActivity extends AppCompatActivity {
         editTextNote = findViewById(R.id.editTextNote);
         radioButtonLow = findViewById(R.id.radioButtonLow);
         radioButtonMedium = findViewById(R.id.radioButtonMedium);
-        radioButtonHigh = findViewById(R.id.radioButtonHigh);
         buttonSave = findViewById(R.id.buttonSave);
     }
 
@@ -66,7 +64,6 @@ public class AddNoteActivity extends AppCompatActivity {
             addNoteViewModel.saveNote(note);
         }
     }
-
 
     private int getPriority() {
         int priority;

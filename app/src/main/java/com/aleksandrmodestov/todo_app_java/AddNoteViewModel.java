@@ -9,10 +9,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import models.Note;
 
@@ -40,6 +40,11 @@ public class AddNoteViewModel extends AndroidViewModel {
                     public void run() throws Throwable {
                         Log.d("AddNoteViewModel", "subscribe");
                         shouldCloseScreen.postValue(true);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Throwable {
+                        Log.d("AddNoteViewModel", "An error occurred while saving a note");
                     }
                 });
         compositeDisposable.add(disposable);

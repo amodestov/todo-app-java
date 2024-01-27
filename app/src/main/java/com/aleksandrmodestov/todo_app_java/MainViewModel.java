@@ -30,20 +30,7 @@ public class MainViewModel extends AndroidViewModel  {
     }
 
     public LiveData<List<Note>> getNotes() {
-        return notes;
-    }
-
-    public void refreshList() {
-        Disposable disposable = notesDao.getNotes()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Note>>() {
-                    @Override
-                    public void accept(List<Note> notesFromDB) throws Throwable {
-                        notes.setValue(notesFromDB);
-                    }
-                });
-        compositeDisposable.add(disposable);
+        return notesDao.getNotes();
     }
 
     public void removeNote(Note note) {
@@ -55,7 +42,11 @@ public class MainViewModel extends AndroidViewModel  {
                             @Override
                             public void run() throws Throwable {
                                 Log.d("MainViewModel", "removed note " + note.getId());
-                                refreshList();
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Throwable {
+                                Log.d("MainViewModel", "An error occurred while deleting the note");
                             }
                         });
         compositeDisposable.add(disposable);
